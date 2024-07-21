@@ -163,4 +163,9 @@ config SAMPLE_RUST_SELFTESTS
 
 	  If unsure, say N.
 
+config SAMPLE_RUST_HELLOWORLD
+	tristate "Helloworld"
+	help
+	  This option is written by KamijoToma for cicv-r4l assignment 3
+
 endif # SAMPLES_RUST
