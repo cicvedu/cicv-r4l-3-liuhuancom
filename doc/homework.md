@@ -17,3 +17,16 @@
 
 ![image](https://github.com/user-attachments/assets/21bcb3a5-13b9-450c-89fa-18b920c4cb56)
 ![image](https://github.com/user-attachments/assets/d3b55fc2-8e99-465b-9938-31801cbe9354)
+
+
+#### 作业4
+
+
+#### 作业5
+
+![image](https://github.com/user-attachments/assets/992a3798-8aad-46b5-a249-21a710847ad5)
+
+Q：作业5中的字符设备/dev/cicv是怎么创建的？它的设备号是多少？它是如何与我们写的字符设备驱动关联上的？
+build_image.sh脚本中有条命令设置的 命令是 `echo "mknod /dev/cicv c 248 0" >> etc/init.d/rcS`
+由mknod的命令可以知道 主设备是248
+是通过主设备号关联的
