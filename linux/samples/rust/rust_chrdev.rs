@@ -40,11 +40,43 @@ impl file::Operations for RustFile {
     }
 
     fn write(_this: &Self,_file: &file::File,_reader: &mut impl kernel::io_buffer::IoBufferReader,_offset:u64,) -> Result<usize> {
-        Err(EPERM)
+        // Err(EPERM)
+        
+        let mut guard = _this.inner.lock(); 
+        let buffer = &mut *guard;
+
+        if _offset as usize >= GLOBALMEM_SIZE {
+            return Err(EINVAL);
+        }
+
+        let remaining_space = GLOBALMEM_SIZE - _offset as usize;
+        let data_to_write = core::cmp::min(_reader.len(), remaining_space);
+
+        unsafe {
+            _reader.read_raw(buffer.as_mut_ptr().add(_offset as usize), data_to_write)?;
+        }
+
+        Ok(data_to_write)
     }
 
     fn read(_this: &Self,_file: &file::File,_writer: &mut impl kernel::io_buffer::IoBufferWriter,_offset:u64,) -> Result<usize> {
-        Err(EPERM)
+        // Err(EPERM)
+        
+        let guard = _this.inner.lock();
+        let buffer = &*guard;
+
+        if _offset as usize >= GLOBALMEM_SIZE {
+            return Ok(0);
+        }
+
+        let remaining_data = GLOBALMEM_SIZE - _offset as usize;
+        let data_to_read = core::cmp::min(_writer.len(), remaining_data);
+
+        unsafe {
+            _writer.write_raw(buffer.as_ptr().add(_offset as usize), data_to_read)?;
+        }
+
+        Ok(data_to_read)
     }
 }
 
